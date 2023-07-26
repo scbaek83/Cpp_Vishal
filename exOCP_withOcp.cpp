@@ -15,7 +15,7 @@ struct Product {
 };
 
 using Items = vector<Product*>; 
-#define ALL(C) begin(C), end(C) 
+// #define ALL(C) begin(C), end(C) 
 
 template <typename T> 
 struct Specification {
@@ -50,6 +50,23 @@ struct BetterFilter : Filter<Product> {
     }
 };
 
+template <typename T> 
+struct AndSpecification : Specification<T> {
+    const Specification<T> &first; 
+    const Specification<T> &second; 
+
+    AndSpecification(const Specification<T> &first, const Specification<T> &second) : first(first), second(second) {} 
+
+    bool is_satisfied(T *item) const {
+        return first.is_satisfied(item) && second.is_satisfied(item); 
+    }
+};
+
+template <typename T> 
+AndSpecification<T> operator &&(const Specification<T> &first, const Specification<T> &second) {
+    return {first, second};
+}
+
 int main(void) 
 {
     const Items all{
@@ -58,9 +75,16 @@ int main(void)
         new Product{"House", COLOR::BLUE, SIZE::LARGE}
     }; 
 
+    auto green_things = ColorSpecification{COLOR::GREEN}; 
+    auto large_things = SizeSpecification{SIZE::LARGE}; 
+
+    BetterFilter f1; 
+    for (auto &p : f1.filter(all, SizeSpecification{SIZE::SMALL}))
+        cout << p->m_name << " is small\n";
+    
     BetterFilter bf; 
-    for (auto &x : bf.filter(all, ColorSpecification(COLOR::GREEN))) 
-        cout << x->m_name << " is green\n"; 
+    for (auto &x : bf.filter(all, green_things && large_things)) 
+        cout << x->m_name << " is green and large\n"; 
 
     return EXIT_SUCCESS; 
 }
