@@ -25,6 +25,7 @@ struct SavingManager {
         for (auto &s : j.get_entries()) 
             ofs << s << endl; 
     }
+    // test 
 };
 
 int main() 
