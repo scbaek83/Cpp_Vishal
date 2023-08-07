@@ -9,6 +9,7 @@
 			"args": [
 				"-fdiagnostics-color=always",
 				"-g",
+				// "${fileDirname}/*.cpp",
 				"${file}",
 				"-o",
 				"${fileDirname}\\${fileBasenameNoExtension}.exe"
@@ -24,7 +25,7 @@
 		}, 
 		{
 			// binary execution
-			"label": "executeion", 
+			"label": "execution", 
 			"command": "cmd", 
 			"group": "test", 
 			"args": [
